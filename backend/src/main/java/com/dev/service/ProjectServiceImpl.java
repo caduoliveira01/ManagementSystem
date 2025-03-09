@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService{
@@ -15,19 +17,53 @@ public class ProjectServiceImpl implements ProjectService{
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ChatService chatService;
+
     @Override
     public Project createProject(Project project, User user) throws Exception {
-        return null;
+        Project createProject= new Project();
+        createProject.setOwner(user);
+        createProject.setTags(project.getTags());
+        createProject.setName(project.getName());
+        createProject.setCategory(project.getCategory());
+        createProject.setDescription(project.getDescription());
+        createProject.getTeam().add(user);
+
+        Project savedProject = projectRepository.save(createProject);
+
+        Chat chat = new Chat();
+        chat.setProject(savedProject);
+        Chat projectChat= chatService.createChat(chat);
+        savedProject.setChat(projectChat);
+        return savedProject;
     }
 
     @Override
     public List<Project> getProjectByTeam(User user, String category, String tag) throws Exception {
-        return List.of();
+        List<Project> projects= projectRepository.findByTeamContainingOrOwner(user, user);
+
+        if (category!=null){
+            projects=projects.stream().filter(project -> project.getCategory().equals(category))
+                    .collect(Collectors.toList());
+        }
+        if (tag!=null){
+            projects=projects.stream().filter(project -> project.getTags().contains(tag))
+                    .collect(Collectors.toList());
+        }
+        return projects;
     }
 
     @Override
     public Project getProjectById(Long projectId) throws Exception {
-        return null;
+        Optional<Project>optionalProject=projectRepository.findById(projectId);
+        if (optionalProject.isEmpty()){
+            throw new Exception("Project not found");
+        }
+        return optionalProject.get();
     }
 
     @Override

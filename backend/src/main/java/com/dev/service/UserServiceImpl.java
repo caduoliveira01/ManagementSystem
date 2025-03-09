@@ -1,9 +1,12 @@
 package com.dev.service;
 
+import com.dev.config.JwtProvider;
 import com.dev.model.User;
 import com.dev.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -13,7 +16,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserProfileByJwt(String jwt) throws Exception {
-        return null;
+        String email = JwtProvider.getEmailFromToken(jwt);
+        return findUserByEmail(email);
     }
 
     @Override
@@ -27,11 +31,16 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserById(Long userId) throws Exception {
-        return null;
+        Optional <User> optionalUser= userRepository.findById(userId);
+        if (optionalUser.isEmpty()){
+            throw new Exception("User not found");
+        }
+        return optionalUser.get();
     }
 
     @Override
     public User updateUsersProijectSize(User user, int number) {
-        return null;
+        user.setProjectSize(user.getProjectSize()+number);
+        return userRepository.save(user);
     }
 }
