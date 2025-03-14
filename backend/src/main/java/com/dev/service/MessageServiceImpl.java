@@ -32,11 +32,11 @@ public class MessageServiceImpl implements MessageService{
         Message message = new Message();
         message.setContent(content);
         message.setSender(sender);
-        message.setCreateAt(LocalDateTime.now());
+        message.setCreatedAt(LocalDateTime.now());
         message.setChat(chat);
         Message savedMessage= messageRepository.save(message);
 
-        chat.getMessages().add((org.apache.logging.log4j.message.Message) savedMessage);
+        chat.getMessages().add(savedMessage);
         return savedMessage;
     }
 

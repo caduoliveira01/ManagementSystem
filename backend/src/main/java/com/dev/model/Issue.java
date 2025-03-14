@@ -19,19 +19,19 @@ public class Issue {
     private String title;
     private String description;
     private String status;
-    private Long projectId;
     private String priority;
     private LocalDate dueDate;
-    private List<String> tags= new ArrayList<>();
+    private List<String> tags = new ArrayList<>();
 
     @ManyToOne
     private User assignee;
 
     @JsonIgnore
     @ManyToOne
+    @JoinColumn(name = "project_id") // Explicitly specify the foreign key column
     private Project project;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Comment> comments= new ArrayList<>();
+    @OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 }
