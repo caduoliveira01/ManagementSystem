@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CustumeUserDetailsImpl implements UserDetailsService {
+public class CustomeUserDetailsImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
