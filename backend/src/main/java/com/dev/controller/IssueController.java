@@ -40,7 +40,6 @@ public class IssueController {
 
         Issue createdIssue = issueService.createIssue(issue, tokenUser);
 
-        // Create the IssueDto
         IssueDto issueDto = new IssueDto();
         issueDto.setId(createdIssue.getId());
         issueDto.setAssignee(createdIssue.getAssignee());
@@ -52,7 +51,6 @@ public class IssueController {
         issueDto.setTags(createdIssue.getTags());
         issueDto.setStatus(createdIssue.getStatus());
 
-        // Access the project ID through the project relationship
         issueDto.setProjectId(createdIssue.getProject().getId());
 
         return ResponseEntity.ok(issueDto);

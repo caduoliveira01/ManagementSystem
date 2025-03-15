@@ -28,7 +28,7 @@ public class Issue {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "project_id") // Explicitly specify the foreign key column
+    @JoinColumn(name = "projectId") // Explicitly specify the foreign key column
     private Project project;
 
     @JsonIgnore
