@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import ProjectCard from '../Project/ProjectCard'
 
-const tag = [
+export const tag = [
   "All","React","Spring boot","mySQL","Next.js","Angular","MongoDB","Python","Php",
 ]
 
