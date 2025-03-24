@@ -33,10 +33,10 @@ const ProjectCard = () => {
               </DropdownMenu>
             </div>
           </div>
-          <p className='text-gray-400 text-sm '>hannah linda</p>
+          <p className='text-gray-400 text-sm '>lofahfqoiafjhwhfwefhsdk</p>
         </div>
         <div className='flex flex-wrap gap-2 items-center'>
-            {[1,1,1,1].map((item)=><Badge key={item} variant="outline">{"s2"}</Badge>)}
+            {[1,1,1,1].map((item)=><Badge key={item} variant="outline">{"React"}</Badge>)}
         </div>
       </div>
     </Card>
