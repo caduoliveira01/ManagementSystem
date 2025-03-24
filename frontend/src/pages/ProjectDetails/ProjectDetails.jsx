@@ -52,7 +52,7 @@ const ProjectDetails = () => {
                         <p>Full stack</p>
                     </div>
                     <div className='flex'>
-                        <p className='w-36'>Category:</p>
+                        <p className='w-36'>Tags:</p>
                         <Badge>aaa</Badge>
                     </div>
                     </div>
@@ -67,7 +67,7 @@ const ProjectDetails = () => {
                 </div>
                 
             </ScrollArea>
-            <div>
+            <div className='lg:w-[30%] rounded-md sticky right-5 top-10'>
                 <ChatBox/>
             </div>
         </div>
