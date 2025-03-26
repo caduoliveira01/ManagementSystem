@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Signup from "./Signup";
 import Login from "./Login";
 import { Button } from "@/components/ui/button";
 
 const Auth = () => {
   const [active, setActive] = useState(true);
+  const navigate = useNavigate(); // Hook para navegação
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/"); // Redireciona para a home se estiver logado
+    }
+  }, [navigate]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#25252b]">

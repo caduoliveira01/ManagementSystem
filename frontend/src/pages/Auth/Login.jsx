@@ -8,20 +8,44 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Login = () => {
   const form = useForm({
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (data) => console.log("Login data", data);
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/auth/signin",
+        data
+      );
+
+      // Salva token e nome do usuário no localStorage
+      localStorage.setItem("token", response.data.jwt);
+      localStorage.setItem("fullName", response.data.fullName);
+
+      navigate("/");
+      window.location.reload();
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Invalid email or password");
+    }
+  };
 
   return (
     <div className="space-y-5">
       <h1 className="text-[#45f3ff] text-2xl font-semibold text-center tracking-wide mb-6">
         Login
       </h1>
-
+      {error && <p className="text-red-500 text-center">{error}</p>}{" "}
+      {/* Mostra erro */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField

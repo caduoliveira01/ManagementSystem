@@ -2,16 +2,17 @@ import { useState } from "react";
 import "./App.css";
 import Home from "./pages/Home/Home";
 import Navbar from "./pages/Navbar/Navbar";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ProjectDetails from "./pages/ProjectDetails/ProjectDetails";
 import IssueDetails from "./pages/IssueDetails/IssueDetails";
 import Subscription from "./pages/Subscription/Subscription";
 import Auth from "./pages/Auth/Auth";
 
 function App() {
+  const token = localStorage.getItem("token"); // Verifica se o usuário está autenticado
   return (
     <>
-      {false ? (
+      {token ? (
         <div>
           <Navbar />
           <Routes>
@@ -25,7 +26,11 @@ function App() {
           </Routes>
         </div>
       ) : (
-        <Auth />
+        <Routes>
+          <Route path="/auth" element={<Auth />} />
+          <Route path="*" element={<Auth />} />{" "}
+          {/* Redireciona qualquer outra rota para Auth */}
+        </Routes>
       )}
     </>
   );

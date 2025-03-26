@@ -16,13 +16,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     @Autowired
@@ -67,7 +65,7 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping("/signing")
+    @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signing(@RequestBody LoginRequest loginRequest){
         String username= loginRequest.getEmail();
         String password=loginRequest.getPassword();
@@ -77,12 +75,15 @@ public class AuthController {
 
         String jwt = JwtProvider.generateToken(authentication);
 
+        // Pegando o usuário autenticado
+        User user = userRepository.findByEmail(username);
+
         AuthResponse response = new AuthResponse();
         response.setMessage("sign in success");
         response.setJwt(jwt);
+        response.setFullName(user.getFullName()); // Inclui o nome no response
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private Authentication authenticate(String username, String password) {

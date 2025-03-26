@@ -10,4 +10,13 @@ import lombok.NoArgsConstructor;
 public class AuthResponse {
     private String jwt;
     private String message;
+    private String fullName;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 }

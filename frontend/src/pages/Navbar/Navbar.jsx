@@ -18,12 +18,17 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const fullName = localStorage.getItem("fullName") || "User"; // Pega o nome do usuário do localStorage
+
   return (
     <div className="border-b py-4 px-5 flex items-center justify-between">
       <div className="flex items-center gap-3 ">
         <p onClick={() => navigate("/")} className="cursor-pointer">
           Project Management
         </p>
+
+        {/* Botão New Project */}
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="ghost">New Project</Button>
@@ -33,11 +38,15 @@ const Navbar = () => {
             <CreateProjectForm />
           </DialogContent>
         </Dialog>
+
+        {/* Botão Upgrade */}
         <Button onClick={() => navigate("/upgrade_plan")} variant="ghost">
           Upgrade
         </Button>
       </div>
+
       <div className="flex gap-3 items-center">
+        {/* Menu de Dropdown para o Logout */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -49,10 +58,20 @@ const Navbar = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                localStorage.clear();
+                navigate("/auth");
+                window.location.reload();
+              }}
+            >
+              Logout
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <p>Cadu</p>
+
+        {/* Nome do usuário (retirado de localStorage) */}
+        <p>{fullName}</p>
       </div>
     </div>
   );

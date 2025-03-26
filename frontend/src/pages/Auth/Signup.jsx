@@ -1,4 +1,8 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { signup } from "./authService";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -6,21 +10,36 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
 
 const Signup = () => {
+  const [error, setError] = useState("");
   const form = useForm({
     defaultValues: { fullName: "", email: "", password: "" },
   });
 
-  const onSubmit = (data) => console.log("Signup data", data);
+  const onSubmit = async (data) => {
+    setError("");
+    try {
+      const response = await signup(data.fullName, data.email, data.password);
+      console.log("Cadastro realizado!", response);
+
+      // Salvar token no localStorage (se necessário)
+      localStorage.setItem("token", response.jwt);
+
+      // Redirecionar para a Home
+      window.location.href = "/";
+    } catch (err) {
+      setError("Erro ao cadastrar. Tente novamente.");
+    }
+  };
 
   return (
     <div className="space-y-5">
       <h1 className="text-[#45f3ff] text-2xl font-semibold text-center tracking-wide mb-6">
         Register
       </h1>
+
+      {error && <p className="text-[#ff2770] text-center">{error}</p>}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -30,58 +49,38 @@ const Signup = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="text"
-                    className="bg-transparent border-gray-700 py-5 px-5 text-white placeholder-gray-400 focus:border-[#45f3ff] focus:ring-2 focus:ring-[#45f3ff]/20"
-                    placeholder="Full Name"
-                  />
+                  <Input {...field} type="text" placeholder="Full Name" />
                 </FormControl>
-                <FormMessage className="text-[#ff2770] text-xs" />
+                <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="email"
-                    className="bg-transparent border-gray-700 py-5 px-5 text-white placeholder-gray-400 focus:border-[#45f3ff] focus:ring-2 focus:ring-[#45f3ff]/20"
-                    placeholder="Email"
-                  />
+                  <Input {...field} type="email" placeholder="Email" />
                 </FormControl>
-                <FormMessage className="text-[#ff2770] text-xs" />
+                <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="password"
-                    className="bg-transparent border-gray-700 py-5 px-5 text-white placeholder-gray-400 focus:border-[#45f3ff] focus:ring-2 focus:ring-[#45f3ff]/20"
-                    placeholder="Password"
-                  />
+                  <Input {...field} type="password" placeholder="Password" />
                 </FormControl>
-                <FormMessage className="text-[#ff2770] text-xs" />
+                <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button
-            type="submit"
-            className="w-full mt-5 bg-[#45f3ff] text-[#25252b] hover:bg-[#ff2770] hover:text-white transition-all duration-300 py-6 text-lg font-semibold"
-          >
+          <Button type="submit" className="w-full">
             Register
           </Button>
         </form>
