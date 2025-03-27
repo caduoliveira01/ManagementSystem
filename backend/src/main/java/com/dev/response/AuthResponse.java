@@ -12,11 +12,4 @@ public class AuthResponse {
     private String message;
     private String fullName;
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
 }

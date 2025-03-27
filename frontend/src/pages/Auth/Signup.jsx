@@ -1,8 +1,4 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { signup } from "./authService";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -10,27 +6,18 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
 
 const Signup = () => {
-  const [error, setError] = useState("");
   const form = useForm({
     defaultValues: { fullName: "", email: "", password: "" },
   });
 
-  const onSubmit = async (data) => {
-    setError("");
-    try {
-      const response = await signup(data.fullName, data.email, data.password);
-      console.log("Cadastro realizado!", response);
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
-      // Salvar token no localStorage (se necessário)
-      localStorage.setItem("token", response.jwt);
-
-      // Redirecionar para a Home
-      window.location.href = "/";
-    } catch (err) {
-      setError("Erro ao cadastrar. Tente novamente.");
-    }
+  const onSubmit = (data) => {
+    console.log("Signup data", data);
   };
 
   return (
@@ -39,48 +26,81 @@ const Signup = () => {
         Register
       </h1>
 
-      {error && <p className="text-[#ff2770] text-center">{error}</p>}
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="fullName"
+            rules={{ required: "Full Name is required" }}
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input {...field} type="text" placeholder="Full Name" />
+                  <Input
+                    {...field}
+                    type="text"
+                    className="bg-transparent border-gray-700 py-5 px-5 text-white placeholder-gray-400 focus:border-[#45f3ff] focus:ring-2 focus:ring-[#45f3ff]/20"
+                    placeholder="Full Name"
+                  />
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input {...field} type="email" placeholder="Email" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input {...field} type="password" placeholder="Password" />
-                </FormControl>
-                <FormMessage />
+                <FormMessage className="text-[#ff2770] text-xs" />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <FormField
+            control={form.control}
+            name="email"
+            rules={{ required: "Email is required" }}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="email"
+                    className="bg-transparent border-gray-700 py-5 px-5 text-white placeholder-gray-400 focus:border-[#45f3ff] focus:ring-2 focus:ring-[#45f3ff]/20"
+                    placeholder="Email"
+                  />
+                </FormControl>
+                <FormMessage className="text-[#ff2770] text-xs" />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            rules={{
+              required: "Password is required",
+              pattern: {
+                value: passwordRegex,
+                message:
+                  "Password must contain at least one letter and one number",
+              },
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    className="bg-transparent border-gray-700 py-5 px-5 text-white placeholder-gray-400 focus:border-[#45f3ff] focus:ring-2 focus:ring-[#45f3ff]/20"
+                    placeholder="Password"
+                  />
+                </FormControl>
+                <FormMessage className="text-[#ff2770] text-xs" />
+              </FormItem>
+            )}
+          />
+          <div className="text-sm text-gray-400">
+            <p>
+              Password must have at least 6 characters, one letter, and one
+              number.
+            </p>
+          </div>
+          <Button
+            type="submit"
+            className="w-full mt-5 bg-[#45f3ff] text-[#25252b] hover:bg-[#ff2770] hover:text-white transition-all duration-300 py-6 text-lg font-semibold"
+          >
             Register
           </Button>
         </form>
