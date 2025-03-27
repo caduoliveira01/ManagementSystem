@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MagnifyingGlassIcon,
   MixerHorizontalIcon,
@@ -10,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import ProjectCard from "../Project/ProjectCard";
+import { toast } from "sonner";
 
 export const tag = [
   "All",
@@ -25,12 +26,121 @@ export const tag = [
 
 const ProjectList = () => {
   const [keyword, setKeyword] = useState("");
+  const [projects, setProjects] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentFilters, setCurrentFilters] = useState({
+    category: "all",
+    tag: "All",
+  });
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8080/api/projects", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch projects");
+        }
+
+        const data = await response.json();
+        setProjects(data);
+        applyFilters(data, currentFilters);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        toast.error("Failed to load projects");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  const applyFilters = (projectsToFilter, filters) => {
+    let result = [...projectsToFilter];
+
+    if (filters.category && filters.category !== "all") {
+      result = result.filter(
+        (project) => project.category === filters.category
+      );
+    }
+
+    if (filters.tag && filters.tag !== "All") {
+      result = result.filter(
+        (project) => project.tags && project.tags.includes(filters.tag)
+      );
+    }
+
+    setFilteredProjects(result);
+  };
+
   const handleFilterChange = (section, value) => {
-    console.log("value", value, section);
+    const newFilters = {
+      ...currentFilters,
+      [section]: value,
+    };
+
+    setCurrentFilters(newFilters);
+    applyFilters(projects, newFilters);
   };
-  const handleSearchChange = (e) => {
-    setKeyword(e.target.value);
+
+  const handleSearchChange = async (e) => {
+    const value = e.target.value;
+    setKeyword(value);
+
+    if (value) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `http://localhost:8080/api/projects/search?keyword=${value}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to search projects");
+        }
+
+        const data = await response.json();
+        applyFilters(data, currentFilters);
+      } catch (error) {
+        console.error("Error searching projects:", error);
+        toast.error("Search failed");
+      }
+    } else {
+      applyFilters(projects, currentFilters);
+    }
   };
+
+  const handleProjectCreated = (newProject) => {
+    const updatedProjects = [...projects, newProject];
+    setProjects(updatedProjects);
+    applyFilters(updatedProjects, currentFilters);
+  };
+
+  const handleProjectUpdated = (updatedProject) => {
+    const updatedProjects = projects.map((p) =>
+      p.id === updatedProject.id ? updatedProject : p
+    );
+    setProjects(updatedProjects);
+    applyFilters(updatedProjects, currentFilters);
+  };
+
+  const handleProjectDeleted = (deletedProjectId) => {
+    const updatedProjects = projects.filter((p) => p.id !== deletedProjectId);
+    setProjects(updatedProjects);
+    applyFilters(updatedProjects, currentFilters);
+  };
+
   return (
     <>
       <div className="relative px-5 lg:px-0 lg:flex gap-5 justify-center py-5">
@@ -39,8 +149,7 @@ const ProjectList = () => {
             <div className="flex justify-between lg:w-[20rem]">
               <p className="text-xl -tracking-wider">Filters</p>
               <Button size="icon" variant="ghost">
-                {" "}
-                <MixerHorizontalIcon />{" "}
+                <MixerHorizontalIcon />
               </Button>
             </div>
             <CardContent className="mt-5">
@@ -50,7 +159,7 @@ const ProjectList = () => {
                   <div className="pt-5">
                     <RadioGroup
                       className="space-y-7 pt-5"
-                      defaultValue={"all"}
+                      value={currentFilters.category}
                       onValueChange={(value) =>
                         handleFilterChange("category", value)
                       }
@@ -69,7 +178,7 @@ const ProjectList = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <RadioGroupItem value="frontend" id="r4" />
-                        <Label htmlFor="r5">Front-end</Label>
+                        <Label htmlFor="r4">Front-end</Label>
                       </div>
                     </RadioGroup>
                   </div>
@@ -80,15 +189,15 @@ const ProjectList = () => {
                   <div className="pt-5">
                     <RadioGroup
                       className="space-y-7 pt-5"
-                      defaultValue={"All"}
+                      value={currentFilters.tag}
                       onValueChange={(value) =>
                         handleFilterChange("tag", value)
                       }
                     >
                       {tag.map((item) => (
                         <div key={item} className="flex items-center gap-2">
-                          <RadioGroupItem value={item} id={"r1-${item}"} />
-                          <Label htmlFor={"r1-${item}"}>{item}</Label>
+                          <RadioGroupItem value={item} id={`r1-${item}`} />
+                          <Label htmlFor={`r1-${item}`}>{item}</Label>
                         </div>
                       ))}
                     </RadioGroup>
@@ -111,9 +220,24 @@ const ProjectList = () => {
           </div>
           <div>
             <div className="space-y-5 min-h-[74vh]">
-              {keyword
-                ? [1, 1, 1].map((item) => <ProjectCard key={item} />)
-                : [1, 1, 1, 1, 1].map((item) => <ProjectCard key={item} />)}
+              {loading ? (
+                <div className="flex justify-center items-center h-64">
+                  <p>Loading projects...</p>
+                </div>
+              ) : filteredProjects.length === 0 ? (
+                <div className="flex justify-center items-center h-64">
+                  <p>No projects found</p>
+                </div>
+              ) : (
+                filteredProjects.map((project) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    onProjectUpdated={handleProjectUpdated}
+                    onProjectDeleted={handleProjectDeleted}
+                  />
+                ))
+              )}
             </div>
           </div>
         </section>

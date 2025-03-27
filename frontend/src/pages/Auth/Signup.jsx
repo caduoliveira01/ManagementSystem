@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useState } from "react";
 
 const Signup = () => {
   const form = useForm({
@@ -16,8 +18,29 @@ const Signup = () => {
 
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 
-  const onSubmit = (data) => {
-    console.log("Signup data", data);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onSubmit = async (data) => {
+    try {
+      console.log("Signup data", data);
+      const response = await axios.post(
+        "http://localhost:8080/auth/signup",
+        data
+      );
+      console.log("User created successfully:", response.data);
+
+      setSuccessMessage("User successfully created!");
+      setErrorMessage("");
+
+      form.reset();
+    } catch (error) {
+      console.error("Error signing up:", error.response?.data || error.message);
+      setErrorMessage(
+        "There was an error creating your account. Please try again."
+      );
+      setSuccessMessage("");
+    }
   };
 
   return (
@@ -25,6 +48,18 @@ const Signup = () => {
       <h1 className="text-[#45f3ff] text-2xl font-semibold text-center tracking-wide mb-6">
         Register
       </h1>
+
+      {successMessage && (
+        <div className="bg-green-500 text-white p-5 rounded-md mb-4 text-center shadow-lg">
+          {successMessage}
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="bg-red-500 text-white p-5 rounded-md mb-4 text-center shadow-lg">
+          {errorMessage}
+        </div>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

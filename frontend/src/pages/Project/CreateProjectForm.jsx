@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose } from "@/components/ui/dialog";
+import { DialogClose } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -19,8 +19,9 @@ import {
 import { useForm } from "react-hook-form";
 import { tag } from "../ProjectList/ProjectList";
 import { Cross1Icon } from "@radix-ui/react-icons";
+import { toast } from "sonner";
 
-const CreateProjectForm = () => {
+const CreateProjectForm = ({ onProjectCreated }) => {
   const [selectedTags, setSelectedTags] = useState([]);
 
   const form = useForm({
@@ -42,7 +43,6 @@ const CreateProjectForm = () => {
 
     try {
       const token = localStorage.getItem("token");
-
       const response = await fetch("http://localhost:8080/api/projects", {
         method: "POST",
         headers: {
@@ -53,20 +53,34 @@ const CreateProjectForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao criar o projeto");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erro ao criar o projeto");
       }
 
       const result = await response.json();
       console.log("Projeto criado com sucesso:", result);
-      alert("Projeto criado com sucesso!");
+
+      // Reset form
+      form.reset();
+      setSelectedTags([]);
+
+      // Chamar callback se fornecido
+      if (onProjectCreated) {
+        onProjectCreated(result);
+      }
+
+      // Feedback para o usuário
+      toast.success("Projeto criado com sucesso!");
     } catch (error) {
       console.error("Erro ao criar projeto:", error);
-      alert("Erro ao criar projeto. Verifique sua conexão e tente novamente.");
+      toast.error(error.message || "Erro ao criar projeto");
     }
   };
 
   const handleTagChange = (value) => {
-    setSelectedTags((prevTags) => [...prevTags, value]);
+    if (!selectedTags.includes(value)) {
+      setSelectedTags((prevTags) => [...prevTags, value]);
+    }
   };
 
   const handleRemoveTag = (tagToRemove) => {
@@ -90,6 +104,7 @@ const CreateProjectForm = () => {
                     type="text"
                     className="border w-full border-gray-700 py-5 px-5"
                     placeholder="Project Name"
+                    required
                   />
                 </FormControl>
                 <FormMessage />
@@ -107,6 +122,7 @@ const CreateProjectForm = () => {
                     type="text"
                     className="border w-full border-gray-700 py-5 px-5"
                     placeholder="Description"
+                    required
                   />
                 </FormControl>
                 <FormMessage />
@@ -120,15 +136,12 @@ const CreateProjectForm = () => {
               <FormItem>
                 <FormControl>
                   <Select
-                    defaultValue="fullstack"
-                    value={field.value}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                    }}
-                    type="text"
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    required
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Category"></SelectValue>
+                      <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="fullstack">Full stack</SelectItem>
@@ -147,22 +160,18 @@ const CreateProjectForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select
-                    onValueChange={(value) => {
-                      handleTagChange(value);
-                      field.onChange(value);
-                    }}
-                    type="text"
-                  >
+                  <Select onValueChange={handleTagChange} value="">
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Tags"></SelectValue>
+                      <SelectValue placeholder="Select tags" />
                     </SelectTrigger>
                     <SelectContent>
-                      {tag.map((item) => (
-                        <SelectItem key={item} value={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
+                      {tag
+                        .filter((t) => t !== "All")
+                        .map((item) => (
+                          <SelectItem key={item} value={item}>
+                            {item}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -183,15 +192,9 @@ const CreateProjectForm = () => {
             )}
           />
           <DialogClose>
-            {false ? (
-              <div>
-                <p>You can create only 3 projects with free plan</p>
-              </div>
-            ) : (
-              <Button type="submit" className="w-full mt-5">
-                Create Project
-              </Button>
-            )}
+            <Button type="submit" className="w-full mt-5">
+              Create Project
+            </Button>
           </DialogClose>
         </form>
       </Form>

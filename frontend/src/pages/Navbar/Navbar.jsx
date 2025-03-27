@@ -58,6 +58,9 @@ const Navbar = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => navigate("/profile")}>
+              Profile
+            </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
                 localStorage.clear();

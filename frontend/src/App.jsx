@@ -7,6 +7,7 @@ import ProjectDetails from "./pages/ProjectDetails/ProjectDetails";
 import IssueDetails from "./pages/IssueDetails/IssueDetails";
 import Subscription from "./pages/Subscription/Subscription";
 import Auth from "./pages/Auth/Auth";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   const token = localStorage.getItem("token"); // Verifica se o usuário está autenticado
@@ -22,6 +23,7 @@ function App() {
               path="/project/:projectId/issue/:issueId"
               element={<IssueDetails />}
             />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/upgrade_plan" element={<Subscription />} />
           </Routes>
         </div>

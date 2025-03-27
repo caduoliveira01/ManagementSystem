@@ -27,7 +27,6 @@ const Login = () => {
         data
       );
 
-      // Salva token e nome do usuário no localStorage
       localStorage.setItem("token", response.data.jwt);
       localStorage.setItem("fullName", response.data.fullName);
 
@@ -45,7 +44,6 @@ const Login = () => {
         Login
       </h1>
       {error && <p className="text-red-500 text-center">{error}</p>}{" "}
-      {/* Mostra erro */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField

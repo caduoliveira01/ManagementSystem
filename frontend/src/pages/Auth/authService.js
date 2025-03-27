@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/auth"; // URL do backend
+const API_URL = "http://localhost:8080/auth";
 
 export const login = async (email, password) => {
   try {
@@ -8,7 +8,7 @@ export const login = async (email, password) => {
       email,
       password,
     });
-    return response.data; // Retorna { message, jwt }
+    return response.data;
   } catch (error) {
     console.error(
       "Erro ao fazer login:",
