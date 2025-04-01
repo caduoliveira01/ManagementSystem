@@ -60,16 +60,13 @@ const CreateProjectForm = ({ onProjectCreated }) => {
       const result = await response.json();
       console.log("Projeto criado com sucesso:", result);
 
-      // Reset form
       form.reset();
       setSelectedTags([]);
 
-      // Chamar callback se fornecido
       if (onProjectCreated) {
         onProjectCreated(result);
       }
 
-      // Feedback para o usuário
       toast.success("Projeto criado com sucesso!");
     } catch (error) {
       console.error("Erro ao criar projeto:", error);

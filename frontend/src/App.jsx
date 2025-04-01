@@ -10,7 +10,7 @@ import Auth from "./pages/Auth/Auth";
 import Profile from "./pages/Profile/Profile";
 
 function App() {
-  const token = localStorage.getItem("token"); // Verifica se o usuário está autenticado
+  const token = localStorage.getItem("token");
   return (
     <>
       {token ? (
@@ -18,7 +18,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/project/:id" element={<ProjectDetails />} />
+            <Route path="/project/:projectId" element={<ProjectDetails />} />
             <Route
               path="/project/:projectId/issue/:issueId"
               element={<IssueDetails />}
@@ -31,7 +31,6 @@ function App() {
         <Routes>
           <Route path="/auth" element={<Auth />} />
           <Route path="*" element={<Auth />} />{" "}
-          {/* Redireciona qualquer outra rota para Auth */}
         </Routes>
       )}
     </>

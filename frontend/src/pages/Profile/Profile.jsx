@@ -77,15 +77,10 @@ const Profile = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-md">
-        {/* Seção do Avatar - Agora corretamente centralizada */}
         <div className="flex justify-center pt-6">
           <Avatar className="w-24 h-24">
             <AvatarFallback className="text-3xl bg-primary/10">
-              {user?.firstName ? (
-                user.firstName.charAt(0).toUpperCase()
-              ) : (
-                <PersonIcon />
-              )}
+              {getInitials(user?.fullName)}
             </AvatarFallback>
           </Avatar>
         </div>
@@ -97,7 +92,6 @@ const Profile = () => {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {/* Seção do Email - Label ao lado do valor */}
           <div className="flex items-center justify-center gap-3">
             <EnvelopeClosedIcon className="w-5 h-5 text-muted-foreground" />
             <div className="flex items-center gap-2">
@@ -106,7 +100,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Botões em coluna */}
           <div className="flex flex-col space-y-3 pt-4">
             <Button variant="outline">Edit Profile</Button>
             <Button variant="outline">Change Password</Button>

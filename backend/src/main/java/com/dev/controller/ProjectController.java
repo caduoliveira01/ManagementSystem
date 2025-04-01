@@ -48,6 +48,13 @@ public class ProjectController {
     ) throws Exception {
         User user = userService.findUserProfileByJwt(jwt);
         Project project = projectService.getProjectById(projectId);
+
+        // Garantir que o campo "owner" (usuário do projeto) seja serializado corretamente
+        if (project.getOwner() != null) {
+            // Remover qualquer dado confidencial do User, como a senha
+            project.getOwner().setPassword(null);  // Isso pode ser opcional, se você não quiser enviar o campo 'password'
+        }
+
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
