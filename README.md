@@ -45,3 +45,53 @@ Carlos Oliveira
 
 ### 📌 Linkedin:
 [Carlos Oliveira](https://www.linkedin.com/in/carlos-oliveira-338a04233/)
+
+---
+
+# Project Management
+
+## About the Project
+I developed this project to showcase my skills and improve myself by using tools I hadn't used before.  
+The project is a **Project Manager**, where you can create your user, manage projects, and add tasks within them.
+
+## Technologies Used
+- **Backend:**
+  - Spring Boot
+  - Spring Security
+  - Spring Starter Mail (backend only)
+  - JWT Authentication
+  - MySQL
+
+- **Frontend:**
+  - React + Vite
+  - Tailwind CSS
+  - Shadcn
+  - React Router DOM
+
+## Additional Features
+- I developed three types of filters on the home screen:
+  - Filter by project tags
+  - Filter by project category
+  - Filter by project name
+
+## Endpoints (Available only for authenticated users)
+
+| Method | Endpoint | Description |
+|--------|---------|------------|
+| **POST** | `/auth/signup` | Creates a new user |
+| **POST** | `/auth/signin` | Logs in a user |
+| **GET** | `/api/users/profile` | Returns the user's profile with some of their details |
+| **GET** | `/api/projects` | Returns all projects created by the user |
+| **GET** | `/api/projects/{projectId}` | Returns a project based on its ID |
+| **POST** | `/api/projects/` | Creates a project if all requirements are met |
+| **DELETE** | `/api/projects/{projectId}` | Deletes a project based on its ID |
+| **PUT** | `/api/projects/{projectId}` | Updates a project based on its ID |
+| **GET** | `/api/issues/projects/{projectId}` | Returns issues created within the project using `projectId` |
+| **POST** | `/api/issues/` | Creates an issue |
+| **DELETE** | `/api/issues/{issueId}` | Deletes an issue based on its ID |
+
+## Developed by:
+Carlos Oliveira
+
+### 📌 Linkedin:
+[Carlos Oliveira](https://www.linkedin.com/in/carlos-oliveira-338a04233/)
