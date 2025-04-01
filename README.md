@@ -1,38 +1,47 @@
-# Gestão de projetos
+# Gestão de Projetos
 
-# Sobre o projeto
-Desenvolvi esse projeto com o cunho de demostrar um pouco meus conhecimentos e me aprimorar utilizando ferramentas que não utilizei antes, o projeto consiste em um Gerenciador de projetos onde você cria seu usuário e cria projetos podendo criar tasks dentro dele.
+## Sobre o Projeto
+Desenvolvi esse projeto com o objetivo de demonstrar um pouco dos meus conhecimentos e me aprimorar utilizando ferramentas que ainda não havia usado.  
+O projeto consiste em um Gerenciador de Projetos, onde você pode criar seu usuário, gerenciar projetos e adicionar tarefas dentro deles.
 
-# Tecnologias utilizadas
--Spring boot
--Spring secutiry
--Spring starter mail(apenas no backend)
--JWT Authentication
--React + Vite
--Tailwind CSS
--Shadcn
--React Router DOM
--MySQL
+## Tecnologias Utilizadas
+- **Backend:**
+  - Spring Boot
+  - Spring Security
+  - Spring Starter Mail (apenas no backend)
+  - JWT Authentication
+  - MySQL
 
-# Adicionais
--Desenvolvi 3 tipos de filtro no home, um para tags do projeto, outro pra sua categoria e outro pelo nome
+- **Frontend:**
+  - React + Vite
+  - Tailwind CSS
+  - Shadcn
+  - React Router DOM
 
-# Endpoints (disponiveis apenas se o usuário tiver autenticado)
+## Funcionalidades Adicionais
+- Desenvolvi três tipos de filtro na tela inicial:
+  - Filtro por tags do projeto
+  - Filtro por categoria do projeto
+  - Filtro pelo nome do projeto
+
+## Endpoints (Disponíveis apenas para usuários autenticados)
+
 | Método | Endpoint | Descrição |
-| Post | /auth/signup | Metodo para a criação de um usuário |
-| Post | /auth/signin | Metodo para a entrada de um usuário |
-| Get | /api/users/profile | Retorna o perfil do usuario com alguns de seus dados |
-| Get | /api/projects | Devolve todos os projetos criados pelo usuario |
-| Get | /api/projects/{projectId} | Devolve o projeto com base no id |
-| Post | /api/projects/ | Cria um projeto se todos os requisitos forem preenchidos |
-| Delete | /api/projects/{projectId} | Deleta um projeto com base em seu id |
-| Put | /api/projects/{projectId} | Atualiza um projeto com base em seu id |
-| Get | /api/issues/projects/{projectId} | Retorna as issues criadas dentro do project pelo projectId |
-| Post | /api/issues/ | Cria uma issue |
-| Delete | /api/issues/{issueId} | Deleta uma issue com base em seu id |
+|--------|---------|------------|
+| **POST** | `/auth/signup` | Criação de um usuário |
+| **POST** | `/auth/signin` | Entrada de um usuário |
+| **GET** | `/api/users/profile` | Retorna o perfil do usuário com alguns de seus dados |
+| **GET** | `/api/projects` | Retorna todos os projetos criados pelo usuário |
+| **GET** | `/api/projects/{projectId}` | Retorna um projeto com base no ID |
+| **POST** | `/api/projects/` | Cria um projeto se todos os requisitos forem preenchidos |
+| **DELETE** | `/api/projects/{projectId}` | Deleta um projeto com base no ID |
+| **PUT** | `/api/projects/{projectId}` | Atualiza um projeto com base no ID |
+| **GET** | `/api/issues/projects/{projectId}` | Retorna as issues criadas dentro do projeto pelo `projectId` |
+| **POST** | `/api/issues/` | Cria uma issue |
+| **DELETE** | `/api/issues/{issueId}` | Deleta uma issue com base no ID |
 
-# Desenvolvido por:
+## Desenvolvido por:
 Carlos Oliveira
 
-# Linkedin
-https://www.linkedin.com/in/carlos-oliveira-338a04233/
+### 📌 Linkedin:
+[Carlos Oliveira](https://www.linkedin.com/in/carlos-oliveira-338a04233/)
